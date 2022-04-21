@@ -1,0 +1,6 @@
+module XKNetwork {
+  umbrella header "XKNetwork-umbrella.h"
+
+  export *
+  module * { export * }
+}

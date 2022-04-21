@@ -1,0 +1,6 @@
+module Pods_XKNetwork_Example {
+  umbrella header "Pods-XKNetwork_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
