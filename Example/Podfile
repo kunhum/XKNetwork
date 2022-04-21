@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'XKNetwork_Example' do
+  pod 'XKNetwork', :path => '../'
+
+  target 'XKNetwork_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
