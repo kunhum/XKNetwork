@@ -7,19 +7,21 @@
 
 import Foundation
 import Moya
+import Alamofire
 import RxSwift
+import RxCocoa
 
-let XKNetworkProvider = MoyaProvider<MultiTarget>(requestClosure: XKNetworkObject.requestClosure)
+let XKNetworkProvider = MoyaProvider<MultiTarget>(requestClosure: XKNetworker.requestClosure)
 
-public let XKNetworkObject = XKNetwork.share
+public let XKNetworker = XKNetwork.share
 
 public class XKNetwork: NSObject {
     
-    static let share = XKNetwork()
+    public static let share = XKNetwork()
     ///超时时长
-    var timeoutInterval = 10.0
+    public var timeoutInterval = 10.0
     ///HttpBody处理，适用于要求在参数中放一些通用参数的场景
-    var httpBodyHandler: ((_ httpBody: String) -> String)?
+    public var httpBodyHandler: ((_ httpBody: String) -> String)?
     
     let disposeBag = DisposeBag()
     
@@ -30,9 +32,9 @@ public class XKNetwork: NSObject {
             
             var request = try endpoint.urlRequest()
             
-            request.timeoutInterval = XKNetworkObject.timeoutInterval
+            request.timeoutInterval = XKNetworker.timeoutInterval
             
-            guard let tmpBody = request.httpBody, let httpBody = String(data: tmpBody, encoding: .utf8), let bodyHandler = XKNetworkObject.httpBodyHandler else {
+            guard let tmpBody = request.httpBody, let httpBody = String(data: tmpBody, encoding: .utf8), let bodyHandler = XKNetworker.httpBodyHandler else {
                 done(.success(request))
                 return
             }
@@ -55,9 +57,9 @@ public class XKNetwork: NSObject {
     
 }
 
-extension XKNetwork {
+public extension XKNetwork {
     
-    public func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<T?> {
+    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<T?> {
         
         return Observable.create {
             [weak self]
@@ -99,4 +101,21 @@ extension XKNetwork {
         }
     }
     
+}
+
+public extension Reactive where Base: XKNetwork {
+    
+    ///网络状态
+    var reachabilityStatus: ControlEvent<NetworkReachabilityManager.NetworkReachabilityStatus> {
+        
+        let source: Observable<NetworkReachabilityManager.NetworkReachabilityStatus> = Observable.create { observer in
+            
+            NetworkReachabilityManager.default?.startListening(onQueue: DispatchQueue.global(qos: .background), onUpdatePerforming: { status in
+                observer.onNext(status)
+            })
+            return Disposables.create()
+        }.take(until: deallocated)
+        
+        return ControlEvent(events: source)
+    }
 }

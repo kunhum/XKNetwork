@@ -6,10 +6,16 @@ PODS:
   - Moya/RxSwift (15.0.0):
     - Moya/Core
     - RxSwift (~> 6.0)
+  - RxCocoa (6.5.0):
+    - RxRelay (= 6.5.0)
+    - RxSwift (= 6.5.0)
+  - RxRelay (6.5.0):
+    - RxSwift (= 6.5.0)
   - RxSwift (6.5.0)
-  - XKNetwork (1.0.0):
+  - XKNetwork (1.0.2):
     - HandyJSON
     - Moya/RxSwift
+    - RxCocoa
 
 DEPENDENCIES:
   - XKNetwork (from `../`)
@@ -19,6 +25,8 @@ SPEC REPOS:
     - Alamofire
     - HandyJSON
     - Moya
+    - RxCocoa
+    - RxRelay
     - RxSwift
 
 EXTERNAL SOURCES:
@@ -29,9 +37,11 @@ SPEC CHECKSUMS:
   Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
   HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  RxCocoa: 94f817b71c07517321eb4f9ad299112ca8af743b
+  RxRelay: 1de1523e604c72b6c68feadedd1af3b1b4d0ecbd
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
-  XKNetwork: b9e2c3341bdaf3a5aabd94a6b0dc7af34db6e9dc
+  XKNetwork: 7a1652cdb9599b40b2b9f94197340541c55ba04f
 
 PODFILE CHECKSUM: 003141beac9099c74a9cc3dea87dee26d8d76825
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

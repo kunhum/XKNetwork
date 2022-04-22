@@ -211,10 +211,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 87SBZ4G775;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 87SBZ4G775;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -459,6 +461,7 @@
 			baseConfigurationReference = F9769B85F20DC91BEB46B38C /* Pods-XKNetwork_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 87SBZ4G775;
 				INFOPLIST_FILE = XKNetwork/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -475,6 +478,7 @@
 			baseConfigurationReference = 3CF9988A435CA4E29EAD1E6D /* Pods-XKNetwork_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 87SBZ4G775;
 				INFOPLIST_FILE = XKNetwork/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -490,6 +494,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 142C0CA394E0CBD3A7F415FF /* Pods-XKNetwork_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 87SBZ4G775;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -512,6 +517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 34AE6CC485340102314021FF /* Pods-XKNetwork_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 87SBZ4G775;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
