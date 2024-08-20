@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import HandyJSON
+import XKHandyJson
 import RxSwift
 import Moya
 

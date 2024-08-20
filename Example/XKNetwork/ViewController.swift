@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import XKNetwork
+import XKHandyJson
 
 class ViewController: UIViewController {
     
@@ -31,6 +32,7 @@ class ViewController: UIViewController {
                 print("wifi网络")
             }
         }.disposed(by: disposeBag)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,5 +40,15 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        debugPrint(TestModel.deserialize(from: ["a": "123"])?.name)
+    }
 }
 
+struct TestModel: HandyJSON {
+    var name: String?
+    mutating func mapping(mapper: HelpingMapper) {
+        mapper.specify(property: &name, name: "a")
+    }
+}

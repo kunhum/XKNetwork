@@ -6,8 +6,9 @@
 //
 
 import UIKit
-import HandyJSON
+import XKHandyJson
 import Moya
+import Alamofire
 
 extension String: HandyJSON {}
 
@@ -22,9 +23,9 @@ public extension TargetType {
         return .requestParameters(parameters: paras ?? [:], encoding: encoding)
     }
     
-    func handleImages(images: [Data], imageNames: [String], fileNames: [String]) -> [MultipartFormData] {
+    func handleImages(images: [Data], imageNames: [String], fileNames: [String]) -> [Moya.MultipartFormData] {
         
-        var formDatas = [MultipartFormData]()
+        var formDatas = [Moya.MultipartFormData]()
         
         for (index, data) in images.enumerated() {
             let imageName = imageNames[index]
@@ -54,7 +55,7 @@ public extension TargetType {
     }
     func handleUploadVideoParametersToFormData(videos: [Data], keys: [String], videoNames: [String], parameters: [String : Any]) -> Task {
         
-        var formDatas = [MultipartFormData]()
+        var formDatas = [Moya.MultipartFormData]()
         for (index, data) in videos.enumerated() {
             let imageName = videoNames[index]
             let key       = keys[index]
