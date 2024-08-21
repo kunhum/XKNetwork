@@ -59,14 +59,14 @@ public class XKNetwork: NSObject {
 
 public extension XKNetwork {
     
-    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<T?> {
+    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)> {
         
         return Observable.create {
             [weak self]
             observer in
             
             guard let weakSelf = self else {
-                observer.onError(XKError.nilObject)
+                observer.onError(MoyaError.requestMapping("网络请求不存在"))
                 observer.onCompleted()
                 return Disposables.create()
             }
@@ -79,15 +79,15 @@ public extension XKNetwork {
                     observer.onCompleted()
                     return
                 }
-                
+                /*
                 guard responseModel.isSuccessfulCode() else {
                     
-                    observer.onError(XKError.code(responseModel.message ?? "校验码不正确"))
+                    observer.onError(MoyaError.statusCode(response))
                     observer.onCompleted()
                     return
                 }
-                
-                observer.onNext(responseModel)
+                */
+                observer.onNext((responseModel.codePass(), responseModel))
                 observer.onCompleted()
                 
             } onError: { error in

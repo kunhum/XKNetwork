@@ -18,8 +18,8 @@ public protocol XKResponseProtocol: HandyJSON {
     var code: Int? { get set }
     var message: String? { get set }
     var data: T? { get set }
-    
-    func isSuccessfulCode() -> Bool
+    /// code是否通过
+    func codePass() -> Bool
 }
 
 public extension Response {
