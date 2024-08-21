@@ -15,7 +15,7 @@ public protocol XKResponseProtocol: HandyJSON {
     
     associatedtype T
     
-    var code: Int { get set }
+    var code: Int? { get set }
     var message: String? { get set }
     var data: T? { get set }
     
