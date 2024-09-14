@@ -18,10 +18,12 @@ public let XKNetworker = XKNetwork.share
 public class XKNetwork: NSObject {
     
     public static let share = XKNetwork()
-    ///超时时长
+    /// 超时时长
     public var timeoutInterval = 10.0
-    ///HttpBody处理，适用于要求在参数中放一些通用参数的场景
+    /// HttpBody处理，适用于要求在参数中放一些通用参数的场景
     public var httpBodyHandler: ((_ httpBody: String) -> String)?
+    /// 是否需要再debug模式下输出
+    public var debugPrintInfo: Bool = false
     
     let disposeBag = DisposeBag()
     
@@ -72,6 +74,10 @@ public extension XKNetwork {
             }
             
             XKNetworkProvider.rx.request(MultiTarget(api)).asObservable().subscribe(on: ConcurrentDispatchQueueScheduler.init(qos: .background)).subscribe { response in
+                
+                if XKNetwork.share.debugPrintInfo {
+                    debugPrint(try? response.mapString())
+                }
                 
                 guard let responseModel = try? response.xk_mapObject(responseType) else {
                     
