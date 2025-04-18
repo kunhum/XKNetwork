@@ -10,6 +10,7 @@ import Moya
 import Alamofire
 import RxSwift
 import RxCocoa
+import XKJsonResolver
 
 let XKNetworkProvider = MoyaProvider<MultiTarget>(requestClosure: XKNetworker.requestClosure)
 
@@ -61,8 +62,13 @@ public class XKNetwork: NSObject {
 
 public extension XKNetwork {
     
-    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)> {
-        
+    /// 适合通用请求
+    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)?> {
+        return requestPlainly(api: api, responseType: responseType)
+    }
+    
+    func requestPlainly<T: XKResponsePlainlyProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)?> {
+        /*
         return Observable.create {
             [weak self]
             observer in
@@ -76,24 +82,82 @@ public extension XKNetwork {
             XKNetworkProvider.rx.request(MultiTarget(api)).asObservable().subscribe(on: ConcurrentDispatchQueueScheduler.init(qos: .background)).subscribe { response in
                 
                 if XKNetwork.share.debugPrintInfo {
-                    debugPrint(try? response.mapString())
+                    debugPrint((try? response.mapString()) ?? "")
                 }
                 
-                guard let responseModel = try? response.xk_mapObject(responseType) else {
-                    
-                    observer.onError(MoyaError.jsonMapping(response))
-                    observer.onCompleted()
-                    return
+//                guard let responseModel = response.xk_mapObject(responseType) else {
+//                    
+//                    observer.onError(MoyaError.jsonMapping(response))
+//                    observer.onCompleted()
+//                    return
+//                }
+                let responseModel = response.xk_mapObject(responseType)
+                observer.onNext((responseModel?.isPass() == true, responseModel))
+                observer.onCompleted()
+                
+            } onError: { error in
+                
+                observer.onError(error)
+                observer.onCompleted()
+                
+            }.disposed(by: weakSelf.disposeBag)
+
+            return Disposables.create()
+        }
+         */
+        return createObserver(api: api, type: responseType) { response in
+            let responseModel = response.xk_mapObject(responseType)
+            return (responseModel?.isPass() == true, responseModel)
+        }
+        .map { tuple in
+            return tuple as? (Bool, T?)
+        }
+    }
+    
+    /// 适合请求数据直接是数组的
+    func requestArray<T: XKSmartCodable>(api: TargetType, responseType: T.Type) -> Observable<[T]?> {
+        return createObserver(api: api, type: responseType) {
+            response in
+            return response.xk_mapArray(responseType)
+        }
+        .map { data in
+            return data as? [T]
+        }
+    }
+    
+    /// 适合请求数据直接是字典的，其实就是少了正常的isPass判断
+    func requestDictionary<T: XKSmartCodable>(api: TargetType, responseType: T.Type) -> Observable<T?> {
+        return createObserver(api: api, type: responseType) {
+            response in
+            return response.xk_mapObject(responseType)
+        }
+        .map { data in
+            return data as? T
+        }
+    }
+    
+}
+
+fileprivate extension XKNetwork {
+    
+    func createObserver<T: XKSmartCodable>(api: TargetType, type: T.Type, mapBlock: @escaping ((_ response: Response) -> Any?)) -> Observable<Any?> {
+        return Observable.create {
+            [weak self]
+            observer in
+            
+            guard let weakSelf = self else {
+                observer.onError(MoyaError.requestMapping("网络请求不存在"))
+                observer.onCompleted()
+                return Disposables.create()
+            }
+            
+            XKNetworkProvider.rx.request(MultiTarget(api)).asObservable().subscribe(on: ConcurrentDispatchQueueScheduler.init(qos: .background)).subscribe { response in
+                
+                if XKNetwork.share.debugPrintInfo {
+                    debugPrint((try? response.mapString()) ?? "")
                 }
-                /*
-                guard responseModel.isSuccessfulCode() else {
-                    
-                    observer.onError(MoyaError.statusCode(response))
-                    observer.onCompleted()
-                    return
-                }
-                */
-                observer.onNext((responseModel.codePass(), responseModel))
+                let data = mapBlock(response)
+                observer.onNext(data)
                 observer.onCompleted()
                 
             } onError: { error in

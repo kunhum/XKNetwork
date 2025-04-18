@@ -1,6 +1,6 @@
 {
   "name": "XKNetwork",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "summary": "基于Moya，RxSwift",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/kunhum/XKNetwork",
@@ -13,10 +13,10 @@
   },
   "source": {
     "git": "https://github.com/kunhum/XKNetwork.git",
-    "tag": "1.0.4"
+    "tag": "1.0.7"
   },
   "platforms": {
-    "ios": "10.0"
+    "ios": "11.0"
   },
   "source_files": "XKNetwork/Classes/**/*",
   "dependencies": {
@@ -26,7 +26,7 @@
     "RxCocoa": [
 
     ],
-    "XKHandyJson": [
+    "XKJsonResolver": [
 
     ]
   }

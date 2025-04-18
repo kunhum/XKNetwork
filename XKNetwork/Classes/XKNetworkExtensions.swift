@@ -6,15 +6,15 @@
 //
 
 import UIKit
-import XKHandyJson
+import XKJsonResolver
 import Moya
 import Alamofire
 
-extension String: HandyJSON {}
+extension String: XKSmartCodable {}
 
-extension Int: HandyJSON {}
+extension Int: XKSmartCodable {}
 
-extension Bool: HandyJSON {}
+extension Bool: XKSmartCodable {}
 
 public extension TargetType {
     
