@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'XKNetwork'
-  s.version          = '1.0.9'
+  s.version          = '1.0.10'
   s.summary          = '基于Moya，RxSwift'
 
 # This description is used to generate tags and improve search results.
