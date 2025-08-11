@@ -68,43 +68,6 @@ public extension XKNetwork {
     }
     
     func requestPlainly<T: XKResponsePlainlyProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)?> {
-        /*
-        return Observable.create {
-            [weak self]
-            observer in
-            
-            guard let weakSelf = self else {
-                observer.onError(MoyaError.requestMapping("网络请求不存在"))
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            
-            XKNetworkProvider.rx.request(MultiTarget(api)).asObservable().subscribe(on: ConcurrentDispatchQueueScheduler.init(qos: .background)).subscribe { response in
-                
-                if XKNetwork.share.debugPrintInfo {
-                    debugPrint((try? response.mapString()) ?? "")
-                }
-                
-//                guard let responseModel = response.xk_mapObject(responseType) else {
-//                    
-//                    observer.onError(MoyaError.jsonMapping(response))
-//                    observer.onCompleted()
-//                    return
-//                }
-                let responseModel = response.xk_mapObject(responseType)
-                observer.onNext((responseModel?.isPass() == true, responseModel))
-                observer.onCompleted()
-                
-            } onError: { error in
-                
-                observer.onError(error)
-                observer.onCompleted()
-                
-            }.disposed(by: weakSelf.disposeBag)
-
-            return Disposables.create()
-        }
-         */
         return createObserver(api: api, type: responseType) { response in
             let responseModel = response.xk_mapObject(responseType)
             return (responseModel?.isPass() == true, responseModel)

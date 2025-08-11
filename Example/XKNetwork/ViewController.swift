@@ -32,6 +32,18 @@ struct WelcomeElement: Codable {
 
 typealias Welcome = [WelcomeElement]
 
+struct Man: XKRequest {
+    let weight: Double
+}
+
+struct RequestModel: XKRequest {
+    var id: Int
+    var name: String
+    var age: Int
+    
+    var person: [Man]
+}
+
 class ViewController: UIViewController {
     
     let disposeBag = DisposeBag()
@@ -62,6 +74,8 @@ class ViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        let model = RequestModel(id: 1, name: "Jacky", age: 18, person: [Man(weight: 29.7)])
+        debugPrint(model.toJson())
             
     }
 
@@ -75,6 +89,7 @@ class ViewController: UIViewController {
 //        debugPrint(TestModel.deserialize(from: ["a": "123"])?.name)
     }
 }
+
 
 struct TestModel: XKResponsePlainlyProtocol {
     
