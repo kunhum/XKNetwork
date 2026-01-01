@@ -18,7 +18,9 @@ public extension XKRequest {
         
         for child in mirror.children {
             guard let key = child.label else { continue }
-            dict[key] = unwrap(child.value)
+            let value = unwrap(child.value)
+            guard !(value is NSNull) else { continue }
+            dict[key] = value
         }
         
         return dict
@@ -44,6 +46,11 @@ public extension XKRequest {
         // 如果是字典
         if let dict = any as? [String: Any] {
             return dict.mapValues { unwrap($0) }
+        }
+        
+        // 如果是 RawRepresentable (比如枚举)，取 rawValue
+        if let rawRepresentable = any as? any RawRepresentable {
+            return unwrap(rawRepresentable.rawValue)
         }
         
         // 如果是 XKRequest 协议类型，递归调用 toJson

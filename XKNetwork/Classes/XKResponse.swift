@@ -29,12 +29,6 @@ public extension Response {
     
     //MARK: json to Model
     func xk_mapObject<T: XKSmartCodable>(_ type: T.Type) -> T? {
-        
-//        guard let jsonObject = type.deserialize(from: try mapJSON() as? [String : Any]) else {
-//            
-//            throw MoyaError.jsonMapping(self)
-//        }
-//        return jsonObject
         return type.deserialize(from: try? mapJSON() as? [String : Any])
     }
     

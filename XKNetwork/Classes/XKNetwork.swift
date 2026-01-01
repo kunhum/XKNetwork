@@ -16,6 +16,9 @@ let XKNetworkProvider = MoyaProvider<MultiTarget>(requestClosure: XKNetworker.re
 
 public let XKNetworker = XKNetwork.share
 
+public typealias XKResult<T> = (result: Bool, response: T?)
+public typealias XKResultObserver<T> = Observable<XKResult<T>?>
+
 public class XKNetwork: NSObject {
     
     public static let share = XKNetwork()
@@ -63,12 +66,12 @@ public class XKNetwork: NSObject {
 public extension XKNetwork {
     
     /// 适合通用请求
-    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)?> {
+    func request<T: XKResponseProtocol>(api: TargetType, responseType: T.Type) -> XKResultObserver<T> {
         return requestPlainly(api: api, responseType: responseType)
     }
     
-    func requestPlainly<T: XKResponsePlainlyProtocol>(api: TargetType, responseType: T.Type) -> Observable<(Bool, T?)?> {
-        return createObserver(api: api, type: responseType) { response in
+    func requestPlainly<T: XKResponsePlainlyProtocol>(api: TargetType, responseType: T.Type) -> XKResultObserver<T> {
+        return createObserver(api: api) { response in
             let responseModel = response.xk_mapObject(responseType)
             return (responseModel?.isPass() == true, responseModel)
         }
@@ -79,7 +82,7 @@ public extension XKNetwork {
     
     /// 适合请求数据直接是数组的
     func requestArray<T: XKSmartCodable>(api: TargetType, responseType: T.Type) -> Observable<[T]?> {
-        return createObserver(api: api, type: responseType) {
+        return createObserver(api: api) {
             response in
             return response.xk_mapArray(responseType)
         }
@@ -90,7 +93,7 @@ public extension XKNetwork {
     
     /// 适合请求数据直接是字典的，其实就是少了正常的isPass判断
     func requestDictionary<T: XKSmartCodable>(api: TargetType, responseType: T.Type) -> Observable<T?> {
-        return createObserver(api: api, type: responseType) {
+        return createObserver(api: api) {
             response in
             return response.xk_mapObject(responseType)
         }
@@ -103,7 +106,7 @@ public extension XKNetwork {
 
 fileprivate extension XKNetwork {
     
-    func createObserver<T: XKSmartCodable>(api: TargetType, type: T.Type, mapBlock: @escaping ((_ response: Response) -> Any?)) -> Observable<Any?> {
+    func createObserver(api: TargetType, mapBlock: @escaping ((_ response: Response) -> Any?)) -> Observable<Any?> {
         return Observable.create {
             [weak self]
             observer in
